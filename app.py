@@ -19,42 +19,94 @@ Date = [1, 2, 3, 4, 5, 6]
 Price = [10,20,30,40,50,70]
 Volume = [100,200,300,400,800,900]
 
-app = dash.Dash(__name__)
+external_stylesheets = [
+    {
+        "href": "https://fonts.googleapis.com/css2?"
+        "family=Lato:wght@400;700&display=swap",
+        "rel": "stylesheet",
+    },
+]
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app.title = "Avocado Analytics: Understand Your Avocados!"
 
 app.layout = html.Div(
     children=[
-        html.H1(children="Dashboard example",),
-        html.P(
-            children="An example dashboard to try out functions."
+        html.Div(
+            children=[
+                html.P(children="🥑", className="header-emoji"),
+                html.H1(
+                    children="Avocado Analytics", className="header-title"
+                ),
+                html.P(
+                    children="Analyze the behavior of avocado prices"
+                    " and the number of avocados sold in the US"
+                    " between 2015 and 2018",
+                    className="header-description",
+                ),
+            ],
+            className="header",
         ),
-        html.P(
-            children="This is the next line"
-        ),
-        dcc.Graph(
-            figure={
-                "data": [
-                    {
-                        "x": Date,
-                        "y": Price,
-                        "type": "lines",
-                    },
-                ],
-                "layout": {"title": "Graph 1"},
-            },
-        ),
-        dcc.Graph(
-            figure={
-                "data": [
-                    {
-                        # "x": data["Date"],
-                        # "y": data["Total Volume"],
-                        "x": Date,
-                        "y": Volume,
-                        "type": "lines",
-                    },
-                ],
-                "layout": {"title": "Graph 2"},
-            },
+        html.Div(
+            children=[
+                html.Div(
+                    children=dcc.Graph(
+                        id="price-chart",
+                        config={"displayModeBar": False},
+                        figure={
+                            "data": [
+                                {
+                                    "x": Date,#data["Date"],
+                                    "y": Price,#data["AveragePrice"],
+                                    "type": "lines",
+                                    "hovertemplate": "$%{y:.2f}"
+                                                     "<extra></extra>",
+                                },
+                            ],
+                            "layout": {
+                                "title": {
+                                    "text": "Average Price of Avocados",
+                                    "x": 0.05,
+                                    "xanchor": "left",
+                                },
+                                "xaxis": {"fixedrange": True},
+                                "yaxis": {
+                                    "tickprefix": "$",
+                                    "fixedrange": True,
+                                },
+                                "colorway": ["#17B897"],
+                            },
+                        },
+                    ),
+                    className="card",
+                ),
+                html.Div(
+                    children=dcc.Graph(
+                        id="volume-chart",
+                        config={"displayModeBar": False},
+                        figure={
+                            "data": [
+                                {
+                                    "x": Date, #data["Date"],
+                                    "y": Volume, #data["Total Volume"],
+                                    "type": "lines",
+                                },
+                            ],
+                            "layout": {
+                                "title": {
+                                    "text": "Avocados Sold",
+                                    "x": 0.05,
+                                    "xanchor": "left",
+                                },
+                                "xaxis": {"fixedrange": True},
+                                "yaxis": {"fixedrange": True},
+                                "colorway": ["#E12D39"],
+                            },
+                        },
+                    ),
+                    className="card",
+                ),
+            ],
+            className="wrapper",
         ),
     ]
 )
